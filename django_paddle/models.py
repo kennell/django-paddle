@@ -3,7 +3,7 @@ from django.db import models
 
 class Plan(models.Model):
 
-    id = models.PositiveIntegerField()
+    id = models.PositiveIntegerField(primary_key=True, unique=True)
     name = models.CharField()
     trial_days = models.PositiveIntegerField()
     billing_period = models.PositiveIntegerField()
