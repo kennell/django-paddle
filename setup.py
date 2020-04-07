@@ -12,5 +12,7 @@ setup(
     install_requires=[
         'django',
         'requests',
+        'cryptography',
+        'phpserialize'
     ]
 )
