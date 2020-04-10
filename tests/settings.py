@@ -7,3 +7,5 @@ DATABASES = {
 INSTALLED_APPS = [
     'django_paddle'
 ]
+PADDLE_VENDOR_ID = '12345'
+PADDLE_AUTH_CODE = 'very-secret-auth-code'
