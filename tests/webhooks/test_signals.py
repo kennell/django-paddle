@@ -1,12 +1,9 @@
-from unittest.mock import patch, Mock, MagicMock
+from unittest.mock import MagicMock
 from django.test import Client, TestCase
 from django.urls import reverse
 from django_paddle import signals
 from django_paddle.views import Webhook
-
-
-def mocked_webhook_signature_is_valid(*args):
-    return True
+from tests.helpers import disable_webhook_verification
 
 
 class TestWebhookSignals(TestCase):
@@ -15,7 +12,7 @@ class TestWebhookSignals(TestCase):
         self.client = Client()
         self.path = reverse('django_paddle_webhook')
 
-    @patch('django_paddle.views.webhook_signature_is_valid', new=mocked_webhook_signature_is_valid)
+    @disable_webhook_verification
     def test_subscription_created(self):
         receiver = MagicMock()
         signals.subscription_created.connect(receiver, sender=Webhook)
