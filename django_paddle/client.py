@@ -18,4 +18,4 @@ class PaddleClient:
             url=self.base_url + 'subscription/plans',
             json=self.payload
         )
-        return rsp.json()
+        return rsp.json()['response']
