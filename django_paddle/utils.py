@@ -11,6 +11,7 @@ from django.conf import settings
 
 
 def webhook_signature_is_valid(payload):
+
     signature = base64.b64decode(payload.pop('p_signature'))
 
     for field in payload:
