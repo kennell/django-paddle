@@ -19,17 +19,15 @@ class TestPaddleClient(TestCase):
                     'name': 'Foo',
                     'billing_type': 'month',
                     'billing_period': 1,
-                    'initial_price':
-                        {
-                            'USD': '10.00',
-                            'EUR': '10.00'
-                        },
-                    'recurring_price':
-                        {
-                            'USD': '10.00',
-                            'EUR': '10.00'
-                        },
-                    'trial_days': 14
+                    'trial_days': 14,
+                    'initial_price': {
+                        'USD': '10.00',
+                        'EUR': '10.00'
+                    },
+                    'recurring_price': {
+                        'USD': '10.00',
+                        'EUR': '10.00'
+                    }
                 }
             ]
         }

@@ -1,3 +1,4 @@
+import responses
 from django.test import TestCase
 from django_paddle.models import PaddlePlan, PaddleInitialPrice, PaddleRecurringPrice
 
@@ -28,3 +29,88 @@ class TestPaddlePlan(TestCase):
             amount='10.000'
         )
         self.assertEqual(self.plan.recurring_price_in('USD'), '10.000')
+
+
+class TestPaddlePlanSync(TestCase):
+
+    @responses.activate
+    def test_sync_create(self):
+        expected = {
+            'success': True,
+            'response': [
+                {
+                    'id': 12345,
+                    'name': 'Foo',
+                    'billing_type': 'month',
+                    'billing_period': 1,
+                    'trial_days': 14,
+                    'initial_price': {
+                        'USD': '10.00',
+                        'EUR': '10.00'
+                    },
+                    'recurring_price': {
+                        'USD': '10.00',
+                        'EUR': '10.00'
+                    }
+                }
+            ]
+        }
+        responses.add(
+            method=responses.POST,
+            url='https://vendors.paddle.com/api/2.0/subscription/plans',
+            json=expected
+        )
+        PaddlePlan.sync()
+        self.assertEqual(PaddlePlan.objects.count(), 1)
+        self.assertEqual(PaddleInitialPrice.objects.count(), 2)
+        self.assertEqual(PaddleRecurringPrice.objects.count(), 2)
+
+    @responses.activate
+    def test_sync_update(self):
+        plan = PaddlePlan.objects.create(
+            id=12345,
+            name='Foo',
+            billing_type='month',
+            billing_period=1,
+            trial_days=14
+        )
+        plan.initial_prices.create(
+            currency='USD',
+            amount='5.00'
+        )
+        plan.recurring_prices.create(
+            currency='USD',
+            amount='5.00'
+        )
+        expected = {
+            'success': True,
+            'response': [
+                {
+                    'id': 12345,
+                    'name': 'Bar',
+                    'billing_type': 'month',
+                    'billing_period': 1,
+                    'trial_days': 14,
+                    'initial_price': {
+                        'USD': '10.00',
+                        'EUR': '10.00'
+                    },
+                    'recurring_price': {
+                        'USD': '10.00',
+                        'EUR': '10.00'
+                    }
+                }
+            ]
+        }
+        responses.add(
+            method=responses.POST,
+            url='https://vendors.paddle.com/api/2.0/subscription/plans',
+            json=expected
+        )
+        PaddlePlan.sync()
+        plan.refresh_from_db()
+        self.assertEqual(plan.name, 'Bar')
+        self.assertEqual(plan.initial_price_in('USD'), '10.00')
+        self.assertEqual(plan.initial_price_in('EUR'), '10.00')
+        self.assertEqual(plan.recurring_price_in('USD'), '10.00')
+        self.assertEqual(plan.recurring_price_in('EUR'), '10.00')

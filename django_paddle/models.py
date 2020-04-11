@@ -24,7 +24,29 @@ class PaddlePlan(models.Model):
     @staticmethod
     def sync():
         for plan in pc.plans_list():
-            print(plan)
+            plan_obj, _ = PaddlePlan.objects.update_or_create(
+                id=plan['id'],
+                defaults={
+                    'name': plan['name'],
+                    'billing_type': plan['billing_type'],
+                    'billing_period': plan['billing_period'],
+                    'trial_days': plan['trial_days']
+                }
+            )
+            for currency, amount in plan['initial_price'].items():
+                plan_obj.initial_prices.update_or_create(
+                    currency=currency,
+                    defaults={
+                        'amount': amount
+                    }
+                )
+            for currency, amount in plan['recurring_price'].items():
+                plan_obj.recurring_prices.update_or_create(
+                    currency=currency,
+                    defaults={
+                        'amount': amount
+                    }
+                )
 
 
 class PaddlePrice(models.Model):
