@@ -9,7 +9,8 @@ class TestPaddlePlan(TestCase):
             id=123,
             name='Plan Foo',
             billing_type='month',
-            billing_period=1
+            billing_period=1,
+            trial_days=14
         )
 
     def test_initial_price_in(self):

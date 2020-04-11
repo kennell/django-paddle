@@ -38,6 +38,6 @@ class TestPaddleClient(TestCase):
             url='https://vendors.paddle.com/api/2.0/subscription/plans',
             json=expected
         )
-        self.assertDictEqual(
-            self.client.plans_list(), expected
+        self.assertListEqual(
+            self.client.plans_list(), expected['response']
         )
