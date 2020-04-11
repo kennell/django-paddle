@@ -1,4 +1,8 @@
 from django.db import models
+from django_paddle.client import PaddleClient
+
+
+pc = PaddleClient()
 
 
 class PaddlePlan(models.Model):
@@ -7,8 +11,9 @@ class PaddlePlan(models.Model):
         unique=True
     )
     name = models.CharField(max_length=255)
-    billing_period = models.PositiveIntegerField()
     billing_type = models.CharField(max_length=255)
+    billing_period = models.PositiveIntegerField()
+    trial_days = models.PositiveIntegerField()
 
     def initial_price_in(self, currency):
         return self.initial_prices.get(currency=currency).amount
@@ -16,8 +21,10 @@ class PaddlePlan(models.Model):
     def recurring_price_in(self, currency):
         return self.recurring_prices.get(currency=currency).amount
 
-    def __repr__(self):
-        return '<{} {}>'.format(self.__class__.__name__, self.id)
+    @staticmethod
+    def sync():
+        for plan in pc.plans_list():
+            print(plan)
 
 
 class PaddlePrice(models.Model):
@@ -27,9 +34,6 @@ class PaddlePrice(models.Model):
     )
     currency = models.CharField(max_length=255)
     amount = models.CharField(max_length=255)
-
-    def __repr__(self):
-        return '<{} {}>'.format(self.__class__.__name__, self.currency)
 
     class Meta:
         abstract = True

@@ -1,4 +1,5 @@
 from django.core.management.base import BaseCommand
+from django_paddle.models import PaddlePlan, PaddleInitialPrice, PaddleRecurringPrice
 
 
 class SyncPlans(BaseCommand):
