@@ -71,3 +71,18 @@ class PaddleRecurringPrice(PaddlePrice):
 
     class Meta:
         default_related_name = 'recurring_prices'
+
+
+class PaddleSubscription(models.Model):
+    id = models.PositiveIntegerField(
+        primary_key=True,
+        unique=True
+    )
+    plan = models.ForeignKey(to=PaddlePlan, null=True, on_delete=models.SET_NULL)
+    user_id = models.PositiveIntegerField()
+    user_email = models.EmailField()
+    marketing_consent = models.BooleanField()
+    update_url = models.CharField(max_length=255)
+    cancel_url = models.CharField(max_length=255)
+    state = models.CharField(max_length=255)
+    signup_date = models.DateTimeField()

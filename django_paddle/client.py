@@ -19,3 +19,25 @@ class PaddleClient:
             json=self.payload
         )
         return rsp.json()['response']
+
+    def subscriptions_list(self):
+        subscriptions = []
+        max_results = 200
+
+        self.payload.update(
+            page=1,
+            results_per_page=max_results
+        )
+
+        while True:
+            data = requests.post(
+                url=self.base_url + 'subscription/users',
+                json=self.payload
+            ).json()['response']
+            subscriptions += data
+            if len(data) < max_results:
+                break
+            else:
+                self.payload['page'] += 1
+
+        return subscriptions
