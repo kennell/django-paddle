@@ -14,5 +14,10 @@ setup(
         'requests',
         'cryptography',
         'phpserialize'
-    ]
+    ],
+    extras_require={
+        'dev': [
+            'responses',
+        ]
+    }
 )

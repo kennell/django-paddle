@@ -41,3 +41,12 @@ class PaddleClient:
                 self.payload['page'] += 1
 
         return subscriptions
+
+    def subscriptions_cancel(self, subscription_id):
+        self.payload.update(
+            subscription_id=subscription_id
+        )
+        requests.post(
+            url=self.base_url + 'subscription/users_cancel',
+            json=self.payload
+        )

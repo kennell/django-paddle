@@ -86,3 +86,8 @@ class PaddleSubscription(models.Model):
     cancel_url = models.CharField(max_length=255)
     state = models.CharField(max_length=255)
     signup_date = models.DateTimeField()
+
+    def cancel(self):
+        pc.subscriptions_cancel(self.id)
+        self.state = 'deleted'
+        self.save()
