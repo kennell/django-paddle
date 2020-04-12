@@ -2,7 +2,6 @@
 
 Django models and helpers for integrating Paddle.com subscriptions
 
-
 **WORK IN PROGRESS, NOT SUITEABLE FOR PRODUCTION USE**
 
 ### Installation
@@ -25,5 +24,3 @@ TBA
 ```
 python runtests.py
 ```
-
-

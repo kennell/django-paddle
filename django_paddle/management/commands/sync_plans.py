@@ -1,9 +1,9 @@
 from django.core.management.base import BaseCommand
-from django_paddle.models import PaddlePlan, PaddleInitialPrice, PaddleRecurringPrice
+from django_paddle.models import PaddlePlan
 
 
 class SyncPlans(BaseCommand):
     help = 'Sync plans'
 
     def handle(self, *args, **options):
-        self.stdout.write(self.style.SUCCESS('Sync'))
+        PaddlePlan.sync()
