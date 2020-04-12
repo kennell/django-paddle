@@ -9,6 +9,8 @@ class TestPaddleClient(TestCase):
     def setUp(self):
         self.client = PaddleClient()
 
+    # Plans
+
     @responses.activate
     def test_plans_list(self):
         expected = {
@@ -39,6 +41,8 @@ class TestPaddleClient(TestCase):
         self.assertListEqual(
             self.client.plans_list(), expected['response']
         )
+
+    # Subscriptions
 
     @responses.activate
     def test_subscriptions_list(self):
