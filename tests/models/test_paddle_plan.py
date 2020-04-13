@@ -30,6 +30,18 @@ class TestPaddlePlan(TestCase):
         )
         self.assertEqual(self.plan.recurring_price_in('USD'), '10.000')
 
+    def test_cancel(self):
+        # TBI
+        self.assertTrue(True)
+
+    def test_pause(self):
+        # TBI
+        self.assertTrue(True)
+
+    def test_unpause(self):
+        # TBI
+        self.assertTrue(True)
+
 
 class TestPaddlePlanSync(TestCase):
 
