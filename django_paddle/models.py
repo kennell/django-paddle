@@ -100,6 +100,16 @@ class PaddleSubscription(models.Model):
         self.state = 'deleted'
         self.save()
 
+    def pause(self):
+        pc.subscriptions_pause(subscription_id=self.id)
+        self.state = 'paused'
+        self.save()
+
+    def unpause(self):
+        pc.subscriptions_unpause(subscription_id=self.id)
+        self.state = 'active'
+        self.save()
+
 
 class PaddlePayment(models.Model):
     id = models.PositiveIntegerField(
