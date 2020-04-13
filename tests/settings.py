@@ -9,6 +9,8 @@ DATABASES = {
 }
 
 INSTALLED_APPS = [
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
     'django_paddle'
 ]
 
@@ -20,3 +22,4 @@ MIGeMA0GCSqGSIb3DQEBAQUAA4GMADCBiAKBgFRcEWH8FJB0UnbD7Owhl6anraQS
 06LHL628aVMvu1n6nZyKtvoFJpYTxBE804Evf6FSH5C+oba2BH6fEW9BxtraK7Co
 SKoHy0wFWqzUHsBBAgMBAAE=
 -----END PUBLIC KEY-----"""
+PADDLE_ACCOUNT_MODEL='auth.User'

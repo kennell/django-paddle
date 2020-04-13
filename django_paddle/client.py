@@ -34,13 +34,13 @@ class PaddleClient:
 
     # Subscriptions
 
-    def subscriptions_list(self, deleted=None):
+    def subscriptions_list(self, include_deleted=None):
 
         subscriptions = []
         max_results = 200
         payload = copy.deepcopy(self.base_payload)
         payload.update(page=1, results_per_page=max_results)
-        if deleted:
+        if include_deleted:
             payload.update(state='deleted')
 
         while True:
