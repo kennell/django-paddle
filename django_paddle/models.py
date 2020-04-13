@@ -91,3 +91,17 @@ class PaddleSubscription(models.Model):
         pc.subscriptions_cancel(self.id)
         self.state = 'deleted'
         self.save()
+
+
+class PaddlePayment(models.Model):
+    id = models.PositiveIntegerField(
+        unique=True,
+        primary_key=True
+    )
+    subscription = models.ForeignKey(PaddleSubscription, on_delete=models.CASCADE)
+    amount = models.PositiveIntegerField()
+    currency = models.CharField(max_length=255)
+    payout_date = models.CharField(max_length=255)
+    is_paid = models.BooleanField()
+    is_one_off_charge = models.BooleanField()
+    receipt_url = models.CharField(max_length=255)

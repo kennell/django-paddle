@@ -13,12 +13,16 @@ class PaddleClient:
             'vendor_auth_code': self.vendor_auth_code
         }
 
+    # Plans
+
     def plans_list(self):
         rsp = requests.post(
             url=self.base_url + 'subscription/plans',
             json=self.payload
         )
         return rsp.json()['response']
+
+    # Subscriptions
 
     def subscriptions_list(self):
         subscriptions = []
@@ -50,3 +54,15 @@ class PaddleClient:
             url=self.base_url + 'subscription/users_cancel',
             json=self.payload
         )
+
+    # Payments
+
+    def payments_list(self, subscription_id=None, is_paid=None):
+        if subscription_id:
+            self.payload.update(subscription_id=subscription_id)
+        if is_paid is not None:
+            self.payload.update(is_paid=is_paid)
+        return requests.post(
+            url=self.base_url + 'subscription/payments',
+            json=self.payload
+        ).json()['response']
