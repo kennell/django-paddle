@@ -1,8 +1,15 @@
+from django.conf import settings
 from django.db import models
 from django_paddle.client import PaddleClient
+from django.apps import apps
 
 
 pc = PaddleClient()
+
+
+def get_account_model():
+    app, model = settings.PADDLE_ACCOUNT_MODEL.split('.')
+    return apps.get_model(app, model, require_ready=False)
 
 
 class PaddlePlan(models.Model):
@@ -78,7 +85,8 @@ class PaddleSubscription(models.Model):
         primary_key=True,
         unique=True
     )
-    plan = models.ForeignKey(to=PaddlePlan, null=True, on_delete=models.SET_NULL)
+    account = models.ForeignKey(to=get_account_model(), null=True, on_delete=models.SET_NULL)
+    plan = models.ForeignKey(to=PaddlePlan, null=True, on_delete=models.SET_NULL, related_name='subscriptions')
     user_id = models.PositiveIntegerField()
     user_email = models.EmailField()
     marketing_consent = models.BooleanField()

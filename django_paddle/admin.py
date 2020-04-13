@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django_paddle.models import PaddlePlan, PaddleInitialPrice, PaddleRecurringPrice
+from django_paddle.models import PaddlePlan, PaddleInitialPrice, PaddleRecurringPrice, PaddleSubscription
 
 
 class PaddleInitialPriceInline(admin.TabularInline):
@@ -16,3 +16,4 @@ class PaddlePlanAdmin(admin.ModelAdmin):
 
 
 admin.site.register(PaddlePlan, PaddlePlanAdmin)
+admin.site.register(PaddleSubscription)

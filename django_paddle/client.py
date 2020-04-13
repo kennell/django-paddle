@@ -57,6 +57,28 @@ class PaddleClient:
             json=payload
         )
 
+    def subscriptions_pause(self, subscription_id):
+        payload = copy.deepcopy(self.base_payload)
+        payload.update(
+            subscription_id=subscription_id,
+            pause=True
+        )
+        requests.post(
+            url=self.base_url + 'subscription/users/update',
+            json=payload
+        )
+
+    def subscriptions_unpause(self, subscription_id):
+        payload = copy.deepcopy(self.base_payload)
+        payload.update(
+            subscription_id=subscription_id,
+            pause=False
+        )
+        requests.post(
+            url=self.base_url + 'subscription/users/update',
+            json=payload
+        )
+
     # Payments
 
     def payments_list(self, subscription_id=None, is_paid=None):
