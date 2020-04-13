@@ -25,7 +25,7 @@ class TestPaddleSubscription(TestCase):
         )
 
     @responses.activate
-    def test_plan_cancel(self):
+    def test_subscription_cancel(self):
         responses.add(
             method=responses.POST,
             url='https://vendors.paddle.com/api/2.0/subscription/users_cancel',
@@ -36,3 +36,13 @@ class TestPaddleSubscription(TestCase):
         self.plan.cancel()
         self.plan.refresh_from_db()
         self.assertEqual(self.plan.state, 'deleted')
+
+    @responses.activate
+    def test_subscription_pause(self):
+        # TBI
+        self.assertTrue(True)
+
+    @responses.activate
+    def test_subscription_unpause(self):
+        # TBI
+        self.assertTrue(True)
