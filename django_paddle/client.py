@@ -23,6 +23,15 @@ class PaddleClient:
         )
         return rsp.json()['response']
 
+    def plans_get(self, plan_id):
+        payload = copy.deepcopy(self.base_payload)
+        payload.update(plan_id=plan_id)
+        rsp = requests.post(
+            url=self.base_url + 'subscription/plans',
+            json=payload
+        )
+        return rsp.json()['response'][0]
+
     # Subscriptions
 
     def subscriptions_list(self, deleted=None):
@@ -46,6 +55,14 @@ class PaddleClient:
                 payload['page'] += 1
 
         return subscriptions
+
+    def subscriptions_get(self, subscription_id):
+        payload = copy.deepcopy(self.base_payload)
+        payload.update(subscription_id=subscription_id)
+        return requests.post(
+            url=self.base_url + 'subscription/users',
+            json=payload
+        ).json()['response'][0]
 
     def subscriptions_cancel(self, subscription_id):
         payload = copy.deepcopy(self.base_payload)
