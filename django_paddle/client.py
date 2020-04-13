@@ -1,3 +1,4 @@
+import copy
 import requests
 from django.conf import settings
 
@@ -8,7 +9,7 @@ class PaddleClient:
         self.base_url = 'https://vendors.paddle.com/api/2.0/'
         self.vendor_id = settings.PADDLE_VENDOR_ID
         self.vendor_auth_code = settings.PADDLE_AUTH_CODE
-        self.payload = {
+        self.base_payload = {
             'vendor_id': self.vendor_id,
             'vendor_auth_code': self.vendor_auth_code
         }
@@ -18,51 +19,53 @@ class PaddleClient:
     def plans_list(self):
         rsp = requests.post(
             url=self.base_url + 'subscription/plans',
-            json=self.payload
+            json=self.base_payload
         )
         return rsp.json()['response']
 
     # Subscriptions
 
-    def subscriptions_list(self):
+    def subscriptions_list(self, deleted=None):
+
         subscriptions = []
         max_results = 200
-
-        self.payload.update(
-            page=1,
-            results_per_page=max_results
-        )
+        payload = copy.deepcopy(self.base_payload)
+        payload.update(page=1, results_per_page=max_results)
+        if deleted:
+            payload.update(state='deleted')
 
         while True:
             data = requests.post(
                 url=self.base_url + 'subscription/users',
-                json=self.payload
+                json=payload
             ).json()['response']
             subscriptions += data
             if len(data) < max_results:
                 break
             else:
-                self.payload['page'] += 1
+                payload['page'] += 1
 
         return subscriptions
 
     def subscriptions_cancel(self, subscription_id):
-        self.payload.update(
+        payload = copy.deepcopy(self.base_payload)
+        payload.update(
             subscription_id=subscription_id
         )
         requests.post(
             url=self.base_url + 'subscription/users_cancel',
-            json=self.payload
+            json=payload
         )
 
     # Payments
 
     def payments_list(self, subscription_id=None, is_paid=None):
+        payload = copy.deepcopy(self.base_payload)
         if subscription_id:
-            self.payload.update(subscription_id=subscription_id)
+            payload.update(subscription_id=subscription_id)
         if is_paid is not None:
-            self.payload.update(is_paid=is_paid)
+            payload.update(is_paid=is_paid)
         return requests.post(
             url=self.base_url + 'subscription/payments',
-            json=self.payload
+            json=payload
         ).json()['response']
