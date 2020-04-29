@@ -108,3 +108,12 @@ class PaddleClient:
             url=self.base_url + 'subscription/payments',
             json=payload
         ).json()['response']
+
+    # Transactions
+
+    def transactions_list(self, entity, id):
+        payload = copy.deepcopy(self.base_payload)
+        return requests.post(
+            url=self.base_url + '{}/{}/transactions'.format(entity, id),
+            json=payload
+        ).json()['response']
