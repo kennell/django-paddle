@@ -1,4 +1,4 @@
-import copy
+from copy import copy
 import requests
 from django.conf import settings
 
@@ -24,7 +24,7 @@ class PaddleClient:
         return rsp.json()['response']
 
     def plans_get(self, plan_id):
-        payload = copy.deepcopy(self.base_payload)
+        payload = copy(self.base_payload)
         payload.update(plan_id=plan_id)
         rsp = requests.post(
             url=self.base_url + 'subscription/plans',
@@ -38,7 +38,7 @@ class PaddleClient:
 
         subscriptions = []
         max_results = 200
-        payload = copy.deepcopy(self.base_payload)
+        payload = copy(self.base_payload)
         payload.update(page=1, results_per_page=max_results)
         if include_deleted:
             payload.update(state='deleted')
@@ -57,7 +57,7 @@ class PaddleClient:
         return subscriptions
 
     def subscriptions_get(self, subscription_id):
-        payload = copy.deepcopy(self.base_payload)
+        payload = copy(self.base_payload)
         payload.update(subscription_id=subscription_id)
         return requests.post(
             url=self.base_url + 'subscription/users',
@@ -65,7 +65,7 @@ class PaddleClient:
         ).json()['response'][0]
 
     def subscriptions_cancel(self, subscription_id):
-        payload = copy.deepcopy(self.base_payload)
+        payload = copy(self.base_payload)
         payload.update(
             subscription_id=subscription_id
         )
@@ -75,7 +75,7 @@ class PaddleClient:
         )
 
     def subscriptions_pause(self, subscription_id):
-        payload = copy.deepcopy(self.base_payload)
+        payload = copy(self.base_payload)
         payload.update(
             subscription_id=subscription_id,
             pause=True
@@ -86,7 +86,7 @@ class PaddleClient:
         )
 
     def subscriptions_unpause(self, subscription_id):
-        payload = copy.deepcopy(self.base_payload)
+        payload = copy(self.base_payload)
         payload.update(
             subscription_id=subscription_id,
             pause=False
@@ -99,7 +99,7 @@ class PaddleClient:
     # Payments
 
     def payments_list(self, subscription_id=None, is_paid=None):
-        payload = copy.deepcopy(self.base_payload)
+        payload = copy(self.base_payload)
         if subscription_id:
             payload.update(subscription_id=subscription_id)
         if is_paid is not None:
@@ -112,7 +112,7 @@ class PaddleClient:
     # Transactions
 
     def transactions_list(self, entity, id):
-        payload = copy.deepcopy(self.base_payload)
+        payload = copy(self.base_payload)
         return requests.post(
             url=self.base_url + '{}/{}/transactions'.format(entity, id),
             json=payload
