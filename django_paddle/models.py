@@ -1,20 +1,13 @@
-import json
 from datetime import datetime
 
-from django.conf import settings
 from django.db import models
 from django.utils.timezone import make_aware
 from django_paddle.client import PaddleClient
-from django.apps import apps
+from django_paddle.utils import get_account_model, get_account_by_passthrough
 
 
-DATE_FORMAT = '%Y-%m-%d %H:%M:%S'
+
 pc = PaddleClient()
-
-
-def get_account_model():
-    app, model = settings.PADDLE_ACCOUNT_MODEL.split('.')
-    return apps.get_model(app, model, require_ready=False)
 
 
 class PaddlePlan(models.Model):
@@ -120,20 +113,7 @@ class PaddleSubscription(models.Model):
         for sub in pc.subscriptions_list():
 
             transaction = pc.transactions_list(entity='subscription', id=sub['subscription_id'])[0]
-
-            if transaction['passthrough']:
-                try:
-                    passthrough = json.loads(transaction['passthrough'])
-                    account_id = passthrough['user_id']
-                except json.decoder.JSONDecodeError:
-                    account_id = passthrough
-            else:
-                account_id = None
-
-            try:
-                account = get_account_model().objects.get(id=account_id)
-            except get_account_model().DoesNotExist:
-                account = None
+            account = get_account_by_passthrough(transaction['passthrough'])
 
             try:
                 plan = PaddlePlan.objects.get(id=sub['plan_id'])
@@ -147,7 +127,7 @@ class PaddleSubscription(models.Model):
                     'update_url': sub['update_url'],
                     'cancel_url': sub['cancel_url'],
                     'state': sub['state'],
-                    'signup_date': make_aware(datetime.strptime(sub['signup_date'], DATE_FORMAT))
+                    'signup_date': make_aware(datetime.strptime(sub['signup_date'], '%Y-%m-%d %H:%M:%S'))
             }
 
             if plan:
