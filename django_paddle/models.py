@@ -83,8 +83,18 @@ class PaddleSubscription(models.Model):
         primary_key=True,
         unique=True
     )
-    account = models.ForeignKey(to=get_account_model(), null=True, on_delete=models.SET_NULL)
-    plan = models.ForeignKey(to=PaddlePlan, null=True, on_delete=models.SET_NULL, related_name='subscriptions')
+    account = models.ForeignKey(
+        to=get_account_model(),
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='subscriptions'
+    )
+    plan = models.ForeignKey(
+        to=PaddlePlan,
+        null=True,
+        on_delete=models.SET_NULL,
+        related_name='subscriptions'
+    )
     user_id = models.PositiveIntegerField()
     user_email = models.EmailField()
     marketing_consent = models.BooleanField()
@@ -147,7 +157,11 @@ class PaddlePayment(models.Model):
         unique=True,
         primary_key=True
     )
-    subscription = models.ForeignKey(PaddleSubscription, on_delete=models.CASCADE)
+    subscription = models.ForeignKey(
+        to=PaddleSubscription,
+        on_delete=models.CASCADE,
+        related_name='payments'
+    )
     amount = models.PositiveIntegerField()
     currency = models.CharField(max_length=255)
     payout_date = models.CharField(max_length=255)
