@@ -21,7 +21,7 @@ def get_account_by_passthrough(passthrough):
     if passthrough:
         try:
             passthrough = json.loads(passthrough)
-            account_id = passthrough['user_id']
+            account_id = passthrough['account_id']
         except json.decoder.JSONDecodeError:
             account_id = passthrough
     else:
