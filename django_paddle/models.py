@@ -6,7 +6,6 @@ from django_paddle.client import PaddleClient
 from django_paddle.utils import get_account_model, get_account_by_passthrough
 
 
-
 pc = PaddleClient()
 
 
@@ -164,7 +163,25 @@ class PaddlePayment(models.Model):
     )
     amount = models.PositiveIntegerField()
     currency = models.CharField(max_length=255)
-    payout_date = models.CharField(max_length=255)
+    payout_date = models.DateField(max_length=255)
     is_paid = models.BooleanField()
     is_one_off_charge = models.BooleanField()
-    receipt_url = models.CharField(max_length=255)
+    receipt_url = models.CharField(max_length=255, null=True)
+
+    @staticmethod
+    def sync(subscription_id):
+        for payment in pc.payments_list(subscription_id=subscription_id):
+            defaults = {
+                'amount': payment['amount'],
+                'currency': payment['currency'],
+                'payout_date': make_aware(datetime.strptime(payment['payout_date'], '%Y-%m-%d')),
+                'is_paid': payment['is_paid'],
+                'is_one_off_charge': payment['is_one_off_charge'],
+            }
+            if 'receipt_url' in payment:
+                defaults['receipt_url'] = payment['receipt_url']
+            PaddlePayment.objects.update_or_create(
+                id=payment['id'],
+                subscription_id=PaddleSubscription.objects.get(id=payment['subscription_id']),
+                defaults=defaults
+            )
