@@ -117,10 +117,26 @@ class PaddleSubscription(models.Model):
         self.state = 'active'
         self.save()
 
+    def sync_payments(self):
+        for payment in pc.payments_list(subscription_id=self.id):
+            defaults = {
+                'amount': payment['amount'],
+                'currency': payment['currency'],
+                'payout_date': make_aware(datetime.strptime(payment['payout_date'], '%Y-%m-%d')),
+                'is_paid': payment['is_paid'],
+                'is_one_off_charge': payment['is_one_off_charge'],
+            }
+            if 'receipt_url' in payment:
+                defaults['receipt_url'] = payment['receipt_url']
+            PaddlePayment.objects.update_or_create(
+                id=payment['id'],
+                subscription_id=PaddleSubscription.objects.get(self.id),
+                defaults=defaults
+            )
+
     @staticmethod
     def sync():
         for sub in pc.subscriptions_list():
-
             transaction = pc.transactions_list(entity='subscription', id=sub['subscription_id'])[0]
             account = get_account_by_passthrough(transaction['passthrough'])
 
@@ -168,20 +184,3 @@ class PaddlePayment(models.Model):
     is_one_off_charge = models.BooleanField()
     receipt_url = models.CharField(max_length=255, null=True)
 
-    @staticmethod
-    def sync(subscription_id):
-        for payment in pc.payments_list(subscription_id=subscription_id):
-            defaults = {
-                'amount': payment['amount'],
-                'currency': payment['currency'],
-                'payout_date': make_aware(datetime.strptime(payment['payout_date'], '%Y-%m-%d')),
-                'is_paid': payment['is_paid'],
-                'is_one_off_charge': payment['is_one_off_charge'],
-            }
-            if 'receipt_url' in payment:
-                defaults['receipt_url'] = payment['receipt_url']
-            PaddlePayment.objects.update_or_create(
-                id=payment['id'],
-                subscription_id=PaddleSubscription.objects.get(id=payment['subscription_id']),
-                defaults=defaults
-            )

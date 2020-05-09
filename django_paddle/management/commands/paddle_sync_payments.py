@@ -7,4 +7,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for subscription in PaddleSubscription.objects.all():
-            PaddlePayment.sync(subscription.id)
+            subscription.sync_payments()
