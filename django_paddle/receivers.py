@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.dispatch import receiver
 from django.utils.timezone import make_aware
-from .signals import subscription_created
+from .signals import subscription_created, subscription_cancelled
 from .models import PaddlePlan, PaddleSubscription
 from .utils import get_account_by_passthrough
 
@@ -29,3 +29,18 @@ def subscription_created_receiver(**kwargs):
         state=payload['status'],
         signup_date=make_aware(datetime.strptime(payload['event_time'], '%Y-%m-%d %H:%M:%S'))
     )
+
+
+@receiver(subscription_cancelled)
+def subscription_cancelled_receiver(**kwargs):
+    payload = kwargs['payload']
+
+    try:
+        subscription = PaddleSubscription.objects.get(id=payload['subscription_id'])
+    except PaddlePlan.DoesNotExist:
+        # raise warning/exception here
+        pass
+
+    subscription.state = 'deleted'
+    subscription.save()
+
