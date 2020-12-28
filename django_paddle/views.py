@@ -16,9 +16,14 @@ def webhook(request):
 
     if webhook_signature_is_valid(payload):
         alert_name = payload['alert_name']
-        getattr(signals, alert_name).send(
-            sender=Webhook,
-            payload=payload
-        )
+        signal = getattr(signals, alert_name)
+        if signal:
+            signal.send(
+                sender=Webhook,
+                payload=payload
+            )
+        else:
+            # Log warning if alert_name does not match any signal?
+            pass
 
     return HttpResponse()
