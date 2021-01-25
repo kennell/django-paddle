@@ -78,6 +78,10 @@ class PaddleRecurringPrice(PaddlePrice):
 
 
 class PaddleSubscription(models.Model):
+
+    # TODO: use enum types for state field instead of plain varchar strings
+    # https://docs.djangoproject.com/en/3.0/ref/models/fields/#enumeration-types
+
     id = models.PositiveIntegerField(
         primary_key=True,
         unique=True
