@@ -34,14 +34,22 @@ class PaddleClient:
 
     # Subscriptions
 
-    def subscriptions_list(self, include_deleted=None):
+    def subscriptions_list(self, state=None):
+
+        """
+        :param state:   filter by state, returns all active, past_due, trialing
+                        and paused subscription plans if not specified.
+                        Will NOT return deleted subscriptions
+                See https://developer.paddle.com/api-reference/subscription-api/users/listusers
+        """
 
         subscriptions = []
         max_results = 200
         payload = copy(self.base_payload)
         payload.update(page=1, results_per_page=max_results)
-        if include_deleted:
-            payload.update(state='deleted')
+
+        if state:
+            payload.update(state=state)
 
         while True:
             data = requests.post(
