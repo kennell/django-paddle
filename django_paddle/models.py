@@ -139,8 +139,8 @@ class PaddleSubscription(models.Model):
             )
 
     @staticmethod
-    def sync():
-        for sub in pc.subscriptions_list():
+    def sync(state=None):
+        for sub in pc.subscriptions_list(state=state):
             transaction = pc.transactions_list(entity='subscription', id=sub['subscription_id'])[0]
             account = get_account_by_passthrough(transaction['passthrough'])
 
