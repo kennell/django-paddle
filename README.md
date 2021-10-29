@@ -2,7 +2,7 @@
 
 Django models and helpers for integrating Paddle.com subscriptions
 
-<small>⚠️This library is very much WORK IN PROGRESS, please read this README carefully to understand what is currently supported</small>
+<sub>⚠️This library is very much **WORK IN PROGRESS**, please read this README carefully to understand what is currently supported</sub>
 
 ### Installation
 
@@ -27,7 +27,7 @@ INSTALLED_APPS = [
 ]
 ```
 
-3. In your `settings.py`, add the following settings:
+3. In your `settings.py` add the following settings:
 
 ```python
 PADDLE_VENDOR_ID = '123'
