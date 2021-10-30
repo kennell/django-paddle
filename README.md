@@ -82,8 +82,23 @@ print(u.subscriptions.all())  # <QuerySet [<PaddleSubscription: PaddleSubscripti
 5. Done!
 
 
+### Automatically connecting Users and Subscriptions
 
+We need a shared identifier between the User model and the PaddleSubscription model. This needs to be provided when we redirect a user to the Paddle checkout. If you are using the default Django User model you can provide a unique user ID as a passthrough value. The `subscription_created` webook will check the passtrough field and see if a User with this ID exists and automatically connect it to the newly created subscription.
 
+Example:
+
+```html
+<script src="https://cdn.paddle.com/paddle/paddle.js"></script>
+<script>
+  Paddle.Setup({ vendor: your-vendor-id-here });
+  var uid = "{{ request.user.id }}";  
+  Paddle.Checkout.open({
+    product: 'your-plan-id-here',
+    passthrough: uid
+  });
+</script>
+```    
 
 ### Django Management Commands
 
