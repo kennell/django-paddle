@@ -36,7 +36,7 @@ INSTALLED_APPS = [
 3. In your `settings.py` add the following settings:
 
 ```python
-PADDLE_VENDOR_ID = '123'  # https://vendors.paddle.com/authentication
+PADDLE_VENDOR_ID = 'your-vendor-id-here'  # https://vendors.paddle.com/authentication
 PADDLE_AUTH_CODE = 'your-auth-code-here'  # https://vendors.paddle.com/authentication
 PADDLE_PUBLIC_KEY = """-----BEGIN PUBLIC KEY-----
 your
