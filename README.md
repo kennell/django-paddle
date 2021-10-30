@@ -36,14 +36,14 @@ INSTALLED_APPS = [
 3. In your `settings.py` add the following settings:
 
 ```python
-PADDLE_VENDOR_ID = '123'
-PADDLE_AUTH_CODE = 'your-auth-code-here'
+PADDLE_VENDOR_ID = '123'  # https://vendors.paddle.com/authentication
+PADDLE_AUTH_CODE = 'your-auth-code-here'  # https://vendors.paddle.com/authentication
 PADDLE_PUBLIC_KEY = """-----BEGIN PUBLIC KEY-----
 your
 public
 key
 here
------END PUBLIC KEY-----"""
+-----END PUBLIC KEY-----"""  # https://vendors.paddle.com/public-key
 PADDLE_ACCOUNT_MODEL = 'auth.User'
 ```
 
@@ -57,7 +57,7 @@ urlpatterns = [
 ]
 ```
 
-<sub>ℹ️ This will result in an absolute webhook URL `https://example.com/webhook`. Make sure this is the Webhook URL you set in your Paddle settings.</sub>
+<sub>ℹ️ This will result in an absolute webhook URL `https://example.com/webhook`. Make sure this is the Webhook URL you set in your Paddle settings (https://vendors.paddle.com/alerts-webhooks).</sub>
 
 4. Run migrations
 
