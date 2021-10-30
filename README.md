@@ -1,8 +1,14 @@
 # django-paddle
 
-Django models and helpers for integrating Paddle.com subscriptions
+Django models and helpers for integrating Paddle.com subscriptions with your Django app
 
-<sub>⚠️This library is very much **WORK IN PROGRESS**, please read this README carefully to understand what is currently supported</sub>
+<sub>⚠️This library is very much **WORK IN PROGRESS**, please read this document carefully to understand what is currently supported.</sub>
+             
+Currently this package includes:
+
+* Django Models for plans, plan prices, subscriptions, payments (invoices)
+* Django management commands for sycing plans, subscriptions, payments
+* Webhook receivers that handle subscription creation, subscription cancellation         
 
 ### Installation
 
@@ -41,9 +47,9 @@ here
 PADDLE_ACCOUNT_MODEL = 'auth.User'
 ```
 
-If you are using the default Django User model, set `PADDLE_ACCOUNT_MODEL` to `auth.User`. If you are using a custom User model adjust this setting accordingly, for example `your_custom_app.YourUserModel`.
+<sub>ℹ️ If you are using the default Django User model, set `PADDLE_ACCOUNT_MODEL` to `auth.User`. If you are using a custom User model set this to something like `your_custom_app.YourUserModel`.</sub>
 
-5. In your projects main `urls.py` add the URL to receive webhooks:
+5. In your projects main `urls.py` add the `django_paddle` URLs for receiving webhooks:
 
 ```python
 urlpatterns = [
@@ -51,7 +57,7 @@ urlpatterns = [
 ]
 ```
 
-This will result in an absolute webhook URL `https://example.com/webhook`. Make sure this is the Webhook URL you set in your Paddle settings.
+<sub>ℹ️ This will result in an absolute webhook URL `https://example.com/webhook`. Make sure this is the Webhook URL you set in your Paddle settings.</sub>
 
 4. Run migrations
 
@@ -76,21 +82,14 @@ print(u.subscriptions.all())  # <QuerySet [<PaddleSubscription: PaddleSubscripti
 5. Done!
 
 
+
+
+
 ### Django Management Commands
 
 * `manage.py paddle_sync_plans` - Syncs Subscription Plans
 * `manage.py paddle_sync_subscriptions` - Syncs Subscriptions
 * `manage.py paddle_sync_payments` - Syncs payments for all subscriptions
-
-
-### What works
-
-Currently this package includes:
-
-* Django Models for Plans, Plan prices, Subscriptions, Payments (Invoices)
-* Django management commands for sycing plans, subscriptions, payments
-* Webhook receivers for subscription creation, subscription cancellation 
-
 
 ### Run tests
 
