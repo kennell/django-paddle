@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='paddlesubscription',
             name='cancellation_effective_date',
-            field=models.DateTimeField(default=None, null=True),
+            field=models.DateTimeField(default=None, null=True, blank=True),
         ),
     ]
