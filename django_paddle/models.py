@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from django.db import models
-from django.utils.timezone import make_aware
+from django.utils import timezone
 from django_paddle.client import PaddleClient
 from django_paddle.utils import get_account_model, get_account_by_passthrough
 
@@ -105,6 +105,21 @@ class PaddleSubscription(models.Model):
     cancel_url = models.CharField(max_length=255)
     state = models.CharField(max_length=255)
     signup_date = models.DateTimeField()
+    cancellation_effective_date = models.DateTimeField(null=True, default=None)
+
+    @property
+    def is_active(self):
+        if self.state == 'active':
+            return True
+
+        if timezone.now() < self.cancellation_effective_date:
+            return True
+
+        return False
+
+    @property
+    def is_canceled(self):
+        return bool(self.cancellation_effective_date)
 
     def cancel(self):
         pc.subscriptions_cancel(self.id)
@@ -126,7 +141,7 @@ class PaddleSubscription(models.Model):
             defaults = {
                 'amount': payment['amount'],
                 'currency': payment['currency'],
-                'payout_date': make_aware(datetime.strptime(payment['payout_date'], '%Y-%m-%d')),
+                'payout_date': timezone.make_aware(datetime.strptime(payment['payout_date'], '%Y-%m-%d')),
                 'is_paid': payment['is_paid'],
                 'is_one_off_charge': payment['is_one_off_charge'],
             }
@@ -156,7 +171,7 @@ class PaddleSubscription(models.Model):
                     'update_url': sub['update_url'],
                     'cancel_url': sub['cancel_url'],
                     'state': sub['state'],
-                    'signup_date': make_aware(datetime.strptime(sub['signup_date'], '%Y-%m-%d %H:%M:%S'))
+                    'signup_date': timezone.make_aware(datetime.strptime(sub['signup_date'], '%Y-%m-%d %H:%M:%S'))
             }
 
             if plan:

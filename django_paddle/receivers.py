@@ -23,11 +23,12 @@ def subscription_created_receiver(**kwargs):
         plan=plan,
         user_id=payload['user_id'],
         user_email=payload['email'],
-        marketing_consent=payload['marketing_consent'] == True,
+        marketing_consent=bool(payload['marketing_consent']),
         update_url=payload['update_url'],
         cancel_url=payload['cancel_url'],
         state=payload['status'],
-        signup_date=make_aware(datetime.strptime(payload['event_time'], '%Y-%m-%d %H:%M:%S'))
+        signup_date=make_aware(datetime.strptime(payload['event_time'], '%Y-%m-%d %H:%M:%S')),
+        cancellation_effective_date=None
     )
 
 
@@ -41,6 +42,7 @@ def subscription_cancelled_receiver(**kwargs):
         # raise warning/exception here
         pass
 
-    subscription.state = 'deleted'
+    subscription.cancellation_effective_date = make_aware(datetime.strptime(payload['cancellation_effective_date'], '%Y-%m-%d'))
+    subscription.state = payload['status']
     subscription.save()
 
