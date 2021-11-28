@@ -112,8 +112,9 @@ class PaddleSubscription(models.Model):
         if self.state == 'active':
             return True
 
-        if timezone.now() < self.cancellation_effective_date:
-            return True
+        if self.is_canceled:
+            if timezone.now() < self.cancellation_effective_date:
+                return True
 
         return False
 
