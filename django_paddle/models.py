@@ -150,7 +150,7 @@ class PaddleSubscription(models.Model):
                 defaults['receipt_url'] = payment['receipt_url']
             PaddlePayment.objects.update_or_create(
                 id=payment['id'],
-                subscription_id=PaddleSubscription.objects.get(self.id),
+                subscription=self,
                 defaults=defaults
             )
 
