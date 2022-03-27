@@ -4,7 +4,8 @@ from django.dispatch import Signal
 class WebhookSignalFactory():
 
     def __new__(self):
-        return Signal(providing_args=['payload'])
+        return Signal()
+
 
 # Subscriptions
 subscription_created = WebhookSignalFactory()
