@@ -105,22 +105,25 @@ class PaddleSubscription(models.Model):
     cancel_url = models.CharField(max_length=255)
     state = models.CharField(max_length=255)
     signup_date = models.DateTimeField()
-    cancellation_effective_date = models.DateTimeField(null=True, default=None)
+    cancellation_effective_date = models.DateTimeField(null=True, blank=True, default=None)
+
+    @property
+    def is_canceled(self):
+        return bool(self.cancellation_effective_date)
+
+    @property
+    def is_trialing(self):
+        return self.state == 'trialing'
 
     @property
     def is_active(self):
-        if self.state == 'active':
-            return True
+        return self.state == 'active'
 
         if self.is_canceled:
             if timezone.now() < self.cancellation_effective_date:
                 return True
 
         return False
-
-    @property
-    def is_canceled(self):
-        return bool(self.cancellation_effective_date)
 
     def cancel(self):
         pc.subscriptions_cancel(self.id)
@@ -203,4 +206,3 @@ class PaddlePayment(models.Model):
     is_paid = models.BooleanField()
     is_one_off_charge = models.BooleanField()
     receipt_url = models.CharField(max_length=255, null=True)
-
