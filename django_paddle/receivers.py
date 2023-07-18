@@ -39,7 +39,7 @@ def subscription_cancelled_receiver(**kwargs):
 
     try:
         subscription = PaddleSubscription.objects.get(id=payload['subscription_id'])
-    except PaddlePlan.DoesNotExist:
+    except PaddleSubscription.DoesNotExist:
         # raise warning/exception here
         pass
 
@@ -60,7 +60,7 @@ def subscription_updated_receiver(**kwargs):
 
     try:
         subscription = PaddleSubscription.objects.get(id=payload['subscription_id'])
-    except PaddlePlan.DoesNotExist:
+    except PaddleSubscription.DoesNotExist:
         # raise warning/exception here
         pass
 
