@@ -117,7 +117,7 @@ class PaddleSubscription(models.Model):
 
     @property
     def is_active(self):
-        if self.state == 'active':
+        if self.state in ['active', 'past_due']:
             return True
 
         if self.is_canceled:
