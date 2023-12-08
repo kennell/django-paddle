@@ -15,5 +15,9 @@ class PaddlePlanAdmin(admin.ModelAdmin):
     inlines = [PaddleInitialPriceInline, PaddleRecurringPriceInline]
 
 
+class PaddleSubscriptionAdmin(admin.ModelAdmin):
+    list_display = ['id', 'signup_date', 'user_email', 'state']
+
+
 admin.site.register(PaddlePlan, PaddlePlanAdmin)
-admin.site.register(PaddleSubscription)
+admin.site.register(PaddleSubscription, PaddleSubscriptionAdmin)
